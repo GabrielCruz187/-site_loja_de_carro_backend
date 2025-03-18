@@ -12,26 +12,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Middleware de validação para URL das imagens
-app.use((req, res, next) => {
-    const { foto, fotos } = req.body;
 
-    // Validando a URL da foto principal
-    if (foto && !foto.startsWith("https://res.cloudinary.com")) {
-        return res.status(400).json({ error: "Caminho da imagem principal inválido, deve ser do Cloudinary" });
-    }
-
-    // Validando as URLs das fotos adicionais
-    if (fotos && Array.isArray(fotos)) {
-        for (let fotoURL of fotos) {
-            if (!fotoURL.startsWith("https://res.cloudinary.com")) {
-                return res.status(400).json({ error: "Caminho de uma das imagens adicionais é inválido, deve ser do Cloudinary" });
-            }
-        }
-    }
-
-    next(); // Se a validação passar, continue com a requisição
-});
 
 // Middleware para log das requisições (deve estar antes das rotas)
 app.use((req, res, next) => {
