@@ -1,4 +1,6 @@
 
+
+
 const express = require('express');
 const Carro = require('../models/Carro');
 const router = express.Router();
@@ -18,10 +20,15 @@ router.post('/carros', async (req, res) => {
     try {
       const { modelo, marca, ano, foto, destaque, preco, quilometragem, cor, combustivel, placa, cambio, fotos, descricao    } = req.body;
   
-      // Certifique-se de que a URL começa com "/" (relativo à pasta public)
-      if (!foto.startsWith("/")) {
-        return res.status(400).json({ error: "Caminho da imagem inválido" });
+      const cloudinaryBaseUrl = "https://res.cloudinary.com/";
+
+      if (!foto.startsWith(cloudinaryBaseUrl)) {
+      return res.status(400).json({ error: "Caminho da imagem inválido. Apenas imagens do Cloudinary são permitidas." });
       }
+
+if (fotos && !fotos.every((img) => img.startsWith(cloudinaryBaseUrl))) {
+  return res.status(400).json({ error: "Uma ou mais imagens não são do Cloudinary." });
+}
 
        // Certifique-se de que o preco seja um número válido
        if (isNaN(preco) || preco < 0) {
